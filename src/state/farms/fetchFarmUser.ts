@@ -8,12 +8,19 @@ import { getAddress, getMasterChefAddress } from 'utils/addressHelpers'
 export const fetchFarmUserAllowances = async (account: string) => {
   const masterChefAdress = getMasterChefAddress()
 
+  // console.log(masterChefAdress)
+
   const calls = farmsConfig.map((farm) => {
     const lpContractAddress = getAddress(farm.lpAddresses)
     return { address: lpContractAddress, name: 'allowance', params: [account, masterChefAdress] }
   })
 
-  const rawLpAllowances = await multicall(erc20ABI, calls)
+  let rawLpAllowances = []
+  try {
+    rawLpAllowances = await multicall(erc20ABI, calls)
+  } catch (error) {
+    console.error(rawLpAllowances, error)
+  } 
   const parsedLpAllowances = rawLpAllowances.map((lpBalance) => {
     return new BigNumber(lpBalance).toJSON()
   })

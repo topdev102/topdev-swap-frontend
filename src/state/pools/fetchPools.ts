@@ -22,6 +22,7 @@ export const fetchPoolsBlockLimits = async () => {
     }
   })
 
+  console.log(callsStartBlock)
   const starts = await multicall(sousChefABI, callsStartBlock)
   const ends = await multicall(sousChefABI, callsEndBlock)
 
